@@ -12,10 +12,9 @@ namespace _20200618_acmicpc_11726
 
         static void Main(string[] args)
         {
-            Console.WriteLine(Solve(1));
-            Console.WriteLine(Solve(2));
-            Console.WriteLine(Solve(3));
-            Console.WriteLine(Solve(4));
+            const int mod = 10007;
+            int n = int.Parse(Console.ReadLine().Trim());
+            Console.WriteLine(Solve(n) % mod);
         }
 
         public static int Solve(int n)
