@@ -8,7 +8,7 @@ namespace _20200618_acmicpc_11726
 {
     class Program 
     {
-        static Dictionary<int, int> map = new Dictionary<int, int>(IntEqualityComparer.Default);
+        static Dictionary<int, long> map = new Dictionary<int, long>(IntEqualityComparer.Default);
 
         static void Main(string[] args)
         {
@@ -17,7 +17,7 @@ namespace _20200618_acmicpc_11726
             Console.WriteLine(Solve(n) % mod);
         }
 
-        public static int Solve(int n)
+        public static long Solve(int n)
         {
             if (n < 0)
                 return 0;
