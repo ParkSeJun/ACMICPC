@@ -30,3 +30,24 @@
 *.exe
 *.out
 *.app
+
+# Etc & C#
+*.sln
+*.suo
+*.db
+*.ipch
+*.vcxproj
+*.filters
+*.user
+*.log
+*.idb
+*.pdb
+*.lastbuildstate
+*.tlog
+*.ilk
+*.lock
+*.ide*
+*.csproj*
+*.config
+*.cache
+AssemblyInfo.cs
