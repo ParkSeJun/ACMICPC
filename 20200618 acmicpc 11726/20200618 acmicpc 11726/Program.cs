@@ -8,6 +8,8 @@ namespace _20200618_acmicpc_11726
 {
     class Program
     {
+        static Dictionary<int, int> map = new Dictionary<int, int>();
+
         static void Main(string[] args)
         {
             Console.WriteLine(Solve(1));
@@ -23,7 +25,10 @@ namespace _20200618_acmicpc_11726
             if (n <= 1)
                 return 1;
 
-            return Solve(n - 1) + Solve(n - 2);
+            if (map.ContainsKey(n))
+                return map[n];
+
+            return map[n] = Solve(n - 1) + Solve(n - 2);
         }
     }
 }
