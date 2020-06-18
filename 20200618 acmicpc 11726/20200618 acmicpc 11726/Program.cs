@@ -6,18 +6,21 @@ using System.Threading.Tasks;
 
 namespace _20200618_acmicpc_11726
 {
-    class Program 
+    class Program
     {
         static Dictionary<int, long> map = new Dictionary<int, long>(IntEqualityComparer.Default);
 
         static void Main(string[] args)
         {
             const int mod = 10007;
-            int n = int.Parse(Console.ReadLine().Trim());
-            Console.WriteLine(Solve(n) % mod);
+            //int n = int.Parse(Console.ReadLine().Trim());
+            for (int i = 1; i <= 1000; ++i)
+            {
+                Console.WriteLine($"{i}\t{Solve(i) % mod}");
+            }
         }
 
-        public static long Solve(int n)
+        static long Solve(int n)
         {
             if (n < 0)
                 return 0;
