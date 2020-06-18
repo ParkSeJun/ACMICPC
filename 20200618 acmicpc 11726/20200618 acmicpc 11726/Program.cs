@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace _20200618_acmicpc_11726
 {
-    class Program
+    class Program 
     {
-        static Dictionary<int, int> map = new Dictionary<int, int>();
+        static Dictionary<int, int> map = new Dictionary<int, int>(IntEqualityComparer.Default);
 
         static void Main(string[] args)
         {
@@ -29,6 +29,37 @@ namespace _20200618_acmicpc_11726
                 return map[n];
 
             return map[n] = Solve(n - 1) + Solve(n - 2);
+        }
+    }
+
+    public class IntEqualityComparer : IEqualityComparer<int>
+    {
+        static volatile IntEqualityComparer defaultComparer;
+
+        public static IntEqualityComparer Default
+        {
+            get
+            {
+                IntEqualityComparer comparer = defaultComparer;
+
+                if (comparer == null)
+                {
+                    comparer = new IntEqualityComparer();
+                    defaultComparer = comparer;
+                }
+
+                return comparer;
+            }
+        }
+
+        bool IEqualityComparer<int>.Equals(int x, int y)
+        {
+            return x == y;
+        }
+
+        int IEqualityComparer<int>.GetHashCode(int obj)
+        {
+            return obj.GetHashCode();
         }
     }
 }
