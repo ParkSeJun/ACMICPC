@@ -9,15 +9,18 @@ namespace _20200618_acmicpc_11726
     class Program
     {
         static readonly int mod = 10007;
-        static Dictionary<int, long> map = new Dictionary<int, long>(IntEqualityComparer.Default);
+        static Dictionary<int, int> map = new Dictionary<int, int>(IntEqualityComparer.Default);
 
         static void Main(string[] args)
         {
             //int n = int.Parse(Console.ReadLine().Trim());
-            Console.WriteLine(Solve(92));
+            for (int i = 1; i <= 1000; i++)
+            {
+                Console.WriteLine(Solve(i));
+            }
         }
 
-        static long Solve(int n)
+        static int Solve(int n)
         {
             if (n < 0)
                 return 0;
