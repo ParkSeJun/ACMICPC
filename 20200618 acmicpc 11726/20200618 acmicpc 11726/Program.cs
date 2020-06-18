@@ -13,11 +13,8 @@ namespace _20200618_acmicpc_11726
 
         static void Main(string[] args)
         {
-            //int n = int.Parse(Console.ReadLine().Trim());
-            for (int i = 1; i <= 1000; i++)
-            {
-                Console.WriteLine(Solve(i));
-            }
+            int n = int.Parse(Console.ReadLine().Trim());
+            Console.WriteLine(Solve(n));
         }
 
         static int Solve(int n)
