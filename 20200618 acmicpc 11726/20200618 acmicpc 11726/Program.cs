@@ -8,16 +8,13 @@ namespace _20200618_acmicpc_11726
 {
     class Program
     {
+        static readonly int mod = 10007;
         static Dictionary<int, long> map = new Dictionary<int, long>(IntEqualityComparer.Default);
 
         static void Main(string[] args)
         {
-            const int mod = 10007;
             //int n = int.Parse(Console.ReadLine().Trim());
-            for (int i = 1; i <= 1000; ++i)
-            {
-                Console.WriteLine($"{i}\t{Solve(i) % mod}");
-            }
+            Console.WriteLine(Solve(92));
         }
 
         static long Solve(int n)
@@ -30,7 +27,7 @@ namespace _20200618_acmicpc_11726
             if (map.ContainsKey(n))
                 return map[n];
 
-            return map[n] = Solve(n - 1) + Solve(n - 2);
+            return map[n] = (Solve(n - 1) + Solve(n - 2)) % mod;
         }
     }
 
