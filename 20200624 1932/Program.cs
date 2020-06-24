@@ -8,7 +8,7 @@ namespace _20200624_1932
 {
     class Program
     {
-        class Pos
+        struct Pos
         {
             public static EqualityComparer comparer = new EqualityComparer();
             public int x, y;
@@ -33,7 +33,7 @@ namespace _20200624_1932
             }
         }
 
-        static Dictionary<Pos, long> table = new Dictionary<Pos, long>(Pos.comparer);
+        static Dictionary<Pos, int> table = new Dictionary<Pos, int>(Pos.comparer);
         static int[][] arr;
         static void Main(string[] args)
         {
@@ -51,7 +51,7 @@ namespace _20200624_1932
             for (int i = 0; i < count; i++)
             {
                 var inputs = Console.ReadLine().Trim().Split(' ');
-                arr[i] = new int[count];
+                arr[i] = new int[inputs.Length];
                 for (int j = 0; j < inputs.Length; j++)
                 {
                     arr[i][j] = int.Parse(inputs[j]);
@@ -61,7 +61,7 @@ namespace _20200624_1932
             Console.WriteLine(Solve(new Pos(0, 0)));
         }
 
-        static long Solve(Pos p)
+        static int Solve(Pos p)
         {
             if (p.y >= arr.Length)
                 return 0;
@@ -72,9 +72,13 @@ namespace _20200624_1932
 
             if (!table.ContainsKey(p))
             {
-                long a = Solve(new Pos(p.x, p.y + 1));
-                long b = Solve(new Pos(p.x + 1, p.y + 1));
-                long max = Math.Max(a, b) + arr[p.y][p.x];
+                p.y += 1;
+                int a = Solve(p);
+                p.x += 1;
+                int b = Solve(p);
+                p.x -= 1;
+                p.y -= 1;
+                int max = Math.Max(a, b) + arr[p.y][p.x];
                 table[p] = max;
             }
             return table[p];
