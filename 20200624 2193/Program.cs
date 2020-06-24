@@ -25,7 +25,7 @@ namespace _20200624_2193
             for (int i = 2; i < len; ++i)
             {
                 long c = b;
-                b += b;
+                b += a;
                 a = c;
             }
             return b;
