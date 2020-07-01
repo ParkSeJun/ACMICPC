@@ -75,6 +75,8 @@ namespace _20200701_12100_2
 
         static int[][] Move(int[][] input, DIR dir)
         {
+            List<Pos> mergedList = new List<Pos>();
+
             int[][] arr = new int[count][];
             for (int i = 0; i < count; ++i)
             {
@@ -107,10 +109,11 @@ namespace _20200701_12100_2
                             }
                             else
                             {
-                                if (arr[nearBlock.y][nearBlock.x] == arr[i][j])
+                                if (arr[nearBlock.y][nearBlock.x] == arr[i][j] && !mergedList.Contains(new Pos(nearBlock.y, nearBlock.x)))
                                 {
                                     arr[nearBlock.y][nearBlock.x] *= 2;
                                     arr[i][j] = 0;
+                                    mergedList.Add(new Pos(nearBlock.y, nearBlock.x));
                                 }
                                 else
                                 {
@@ -142,10 +145,11 @@ namespace _20200701_12100_2
                             }
                             else
                             {
-                                if (arr[nearBlock.y][nearBlock.x] == arr[i][j])
+                                if (arr[nearBlock.y][nearBlock.x] == arr[i][j] && !mergedList.Contains(new Pos(nearBlock.y, nearBlock.x)))
                                 {
                                     arr[nearBlock.y][nearBlock.x] *= 2;
                                     arr[i][j] = 0;
+                                    mergedList.Add(new Pos(nearBlock.y, nearBlock.x));
                                 }
                                 else
                                 {
@@ -177,10 +181,11 @@ namespace _20200701_12100_2
                             }
                             else
                             {
-                                if (arr[nearBlock.y][nearBlock.x] == arr[i][j])
+                                if (arr[nearBlock.y][nearBlock.x] == arr[i][j] && !mergedList.Contains(new Pos(nearBlock.y, nearBlock.x)))
                                 {
                                     arr[nearBlock.y][nearBlock.x] *= 2;
                                     arr[i][j] = 0;
+                                    mergedList.Add(new Pos(nearBlock.y, nearBlock.x));
                                 }
                                 else
                                 {
@@ -212,10 +217,11 @@ namespace _20200701_12100_2
                             }
                             else
                             {
-                                if (arr[nearBlock.y][nearBlock.x] == arr[i][j])
+                                if (arr[nearBlock.y][nearBlock.x] == arr[i][j] && !mergedList.Contains(new Pos(nearBlock.y, nearBlock.x)))
                                 {
                                     arr[nearBlock.y][nearBlock.x] *= 2;
                                     arr[i][j] = 0;
+                                    mergedList.Add(new Pos(nearBlock.y, nearBlock.x));
                                 }
                                 else
                                 {
