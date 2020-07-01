@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using static _20200630_12100.Program;
 
 /*
 3
@@ -20,21 +21,28 @@ namespace _20200630_12100
 {
     class Program
     {
-        struct Block
+        public class Block : ICloneable
         {
             public int y, x;
             public int value;
+            public bool isActive;
 
-            public Block(int y, int x, int value)
+            public Block(int y, int x, int value, bool isActive = true)
             {
                 this.y = y;
                 this.x = x;
                 this.value = value;
+                this.isActive = isActive;
             }
 
-            public bool IsSameValue(Block other)
+            object ICloneable.Clone()
             {
-                return value == other.value;
+                return new Block(y, x, value, isActive);
+            }
+
+            public override string ToString()
+            {
+                return $"y{y} x{x} {value} {(isActive ? "" : "DIE")}";
             }
         }
 
@@ -49,6 +57,7 @@ namespace _20200630_12100
 
         static int count;
         static Dictionary<DIR, KeyValuePair<int, int>> moveDic = new Dictionary<DIR, KeyValuePair<int, int>>();
+        static BoxComparer comparer = new BoxComparer();
 
         static void Main(string[] args)
         {
@@ -58,6 +67,17 @@ namespace _20200630_12100
             moveDic[DIR.RIGHT] = new KeyValuePair<int, int>(0, 1);
 
             List<Block> list = new List<Block>();
+
+            //count = 3;
+            //list.Add(new Block(0, 0, 2));
+            //list.Add(new Block(0, 1, 2));
+            //list.Add(new Block(0, 2, 2));
+            //list.Add(new Block(1, 0, 4));
+            //list.Add(new Block(1, 1, 4));
+            //list.Add(new Block(1, 2, 4));
+            //list.Add(new Block(2, 0, 8));
+            //list.Add(new Block(2, 1, 8));
+            //list.Add(new Block(2, 2, 8));
 
             count = int.Parse(Console.ReadLine().Trim()); // 1~20
             for (int i = 0; i < count; i++)
@@ -80,62 +100,64 @@ namespace _20200630_12100
         static int Solve(List<Block> l, DIR dir, int moveCount)
         {
             if (dir != DIR.NONE)
+            {
+                var t = l.Clone();
                 Move(l, dir);
+                if (t.SequenceEqual(l, comparer))
+                    return int.MinValue;
+            }
 
             if (moveCount >= 5)
-                return (from e in l orderby e.value descending select e.value).ElementAt(0);
+                return (from e in l select e.value).Max();
 
-            int left = Solve(GetClone(l), DIR.LEFT, moveCount + 1);
-            int up = Solve(GetClone(l), DIR.UP, moveCount + 1);
-            int down = Solve(GetClone(l), DIR.DOWN, moveCount + 1);
-            int right = Solve(GetClone(l), DIR.RIGHT, moveCount + 1);
+            int left = Solve(l.Clone(), DIR.LEFT, moveCount + 1);
+            int up = Solve(l.Clone(), DIR.UP, moveCount + 1);
+            int down = Solve(l.Clone(), DIR.DOWN, moveCount + 1);
+            int right = Solve(l.Clone(), DIR.RIGHT, moveCount + 1);
 
             return Math.Max(up, Math.Max(down, Math.Max(left, right)));
         }
 
-        static List<Block> GetClone(List<Block> l)
-        {
-            return (from e in l select e).ToList();
-        }
-
         static void Move(List<Block> l, DIR dir)
         {
-            List<Block> order = null;
+            
             switch (dir)
             {
                 case DIR.UP:
-                    order = (from e in l orderby e.y ascending select e).ToList();
+                    l.Sort(delegate (Block a, Block b) { return a.y - b.y; });
                     break;
                 case DIR.DOWN:
-                    order = (from e in l orderby e.y descending select e).ToList();
+                    l.Sort(delegate (Block a, Block b) { return b.y - a.y; });
                     break;
                 case DIR.LEFT:
-                    order = (from e in l orderby e.x ascending select e).ToList();
+                    l.Sort(delegate (Block a, Block b) { return a.x - b.x; });
                     break;
                 case DIR.RIGHT:
-                    order = (from e in l orderby e.x descending select e).ToList();
+                    l.Sort(delegate (Block a, Block b) { return b.x - a.x; });
                     break;
             }
 
-            for (int i = 0; i < order.Count; ++i)
+            foreach (var e in l)
             {
-                Block e = order[i];
-                Block? nearBlock = null;
+                if (!e.isActive)
+                    continue;
+
+                Block nearBlock = null;
                 try
                 {
                     switch (dir)
                     {
                         case DIR.UP:
-                            nearBlock = (from ee in order where ee.x == e.x && ee.y < e.y orderby ee.y descending select ee).ElementAt(0);
+                            nearBlock = (from ee in l where ee.isActive && ee.x == e.x && ee.y < e.y orderby ee.y descending select ee).ToList()[0];
                             break;
                         case DIR.DOWN:
-                            nearBlock = (from ee in order where ee.x == e.x && ee.y > e.y orderby ee.y ascending select ee).ElementAt(0);
+                            nearBlock = (from ee in l where ee.isActive && ee.x == e.x && ee.y > e.y orderby ee.y ascending select ee).ToList()[0];
                             break;
                         case DIR.LEFT:
-                            nearBlock = (from ee in order where ee.y == e.y && ee.x < e.x orderby ee.x descending select ee).ElementAt(0);
+                            nearBlock = (from ee in l where ee.isActive && ee.y == e.y && ee.x < e.x orderby ee.x descending select ee).ToList()[0];
                             break;
                         case DIR.RIGHT:
-                            nearBlock = (from ee in order where ee.y == e.y && ee.x > e.x orderby ee.x ascending select ee).ElementAt(0);
+                            nearBlock = (from ee in l where ee.isActive && ee.y == e.y && ee.x > e.x orderby ee.x ascending select ee).ToList()[0];
                             break;
                     }
                 }
@@ -144,39 +166,59 @@ namespace _20200630_12100
                     nearBlock = null;
                 }
 
-                if (!nearBlock.HasValue)
+                if (nearBlock == null)
                 {
                     switch (dir)
                     {
                         case DIR.UP:
-                            order[i] = new Block(0, e.x, e.value);
+                            e.y = 0;
                             break;
                         case DIR.DOWN:
-                            order[i] = new Block(count - 1, e.x, e.value);
+                            e.y = count - 1;
                             break;
                         case DIR.LEFT:
-                            order[i] = new Block(e.y, 0, e.value);
+                            e.x = 0;
                             break;
                         case DIR.RIGHT:
-                            order[i] = new Block(e.y, count - 1, e.value);
+                            e.x = count - 1;
                             break;
                     }
                     continue;
                 }
 
-                if (e.IsSameValue(nearBlock.Value))
+                if (e.value == nearBlock.value)
                 {
-                    int nearIndex = order.IndexOf(nearBlock.Value);
-                    order[nearIndex] = new Block(nearBlock.Value.y, nearBlock.Value.x, nearBlock.Value.value * 2);
-                    order.RemoveAt(i);
-                    --i;
+                    nearBlock.value *= 2;
+                    e.isActive = false;
                     continue;
                 }
 
-                order[i] = new Block(nearBlock.Value.y - moveDic[dir].Key, nearBlock.Value.x - moveDic[dir].Value, e.value);
+                e.y = nearBlock.y - moveDic[dir].Key;
+                e.x = nearBlock.x - moveDic[dir].Value;
+            }
+        }
+
+        public class BoxComparer : IEqualityComparer<Block>
+        {
+            bool IEqualityComparer<Block>.Equals(Block x, Block y)
+            {
+                return x.x == y.x && x.y == y.y && x.value == y.value && x.isActive == y.isActive;
             }
 
-            l = order;
+            int IEqualityComparer<Block>.GetHashCode(Block obj)
+            {
+                return obj.GetHashCode();
+            }
+        }
+
+
+    }
+
+    static class Extensions
+    {
+        public static List<T> Clone<T>(this List<T> listToClone) where T : ICloneable
+        {
+            return listToClone.Select(item => (T)item.Clone()).ToList();
         }
     }
 }
