@@ -104,7 +104,7 @@ namespace _20200630_12100
                 var t = l.Clone();
                 Move(l, dir);
                 if (t.SequenceEqual(l, comparer))
-                    return int.MinValue;
+                    return (from e in l select e.value).Max();
             }
 
             if (moveCount >= 5)
