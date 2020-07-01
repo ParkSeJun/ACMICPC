@@ -107,7 +107,7 @@ namespace _20200630_12100
                     return (from e in l select e.value).Max();
             }
 
-            if (moveCount >= 5)
+            if (moveCount == 5)
                 return (from e in l select e.value).Max();
 
             int left = Solve(l.Clone(), DIR.LEFT, moveCount + 1);
@@ -120,7 +120,8 @@ namespace _20200630_12100
 
         static void Move(List<Block> l, DIR dir)
         {
-            
+            List<Block> mergedList = new List<Block>();
+
             switch (dir)
             {
                 case DIR.UP:
@@ -186,10 +187,11 @@ namespace _20200630_12100
                     continue;
                 }
 
-                if (e.value == nearBlock.value)
+                if (e.value == nearBlock.value && !mergedList.Contains(nearBlock))
                 {
                     nearBlock.value *= 2;
                     e.isActive = false;
+                    mergedList.Add(nearBlock);
                     continue;
                 }
 
