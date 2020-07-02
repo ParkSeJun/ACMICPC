@@ -20,6 +20,17 @@ namespace _20200702_13458
             var viewers = Console.ReadLine().Split(' ');
             int mainViewCount = int.Parse(viewers[0]);
             int subViewCount = int.Parse(viewers[1]);
+
+            long needSum = 0;
+            for (int i = 0; i < count; i++)
+            {
+                needSum += 1;
+                testerCount[i] -= mainViewCount;
+                if (testerCount[i] <= 0)
+                    continue;
+                needSum += (long)Math.Ceiling((double)testerCount[i] / subViewCount);
+            }
+            Console.WriteLine(needSum);
         }
     }
 }
