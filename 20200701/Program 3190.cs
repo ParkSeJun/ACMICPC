@@ -6,14 +6,28 @@ using System.Threading.Tasks;
 
 namespace _20200701
 {
+    /*
+6
+3
+3 4
+2 5
+5 3
+3
+3 D
+15 L
+17 D
+
+        9
+    */
     class Program
     {
         public enum DIR
         {
-            UP,
+            UP = 0,
             RIGHT,
             DOWN,
-            LEFT
+            LEFT,
+            SIZE
         }
 
         public class Data
@@ -44,8 +58,8 @@ namespace _20200701
             for (int i = 0; i < itemCount; i++)
             {
                 var row = Console.ReadLine().Split(' ');
-                int y_ = int.Parse(row[0]);
-                int x_ = int.Parse(row[1]);
+                int y_ = int.Parse(row[0]) - 1;
+                int x_ = int.Parse(row[1]) - 1;
                 dic[GetPos(y_, x_)] = new Data(isItem: true);
             }
             int actCount = int.Parse(Console.ReadLine());
@@ -57,13 +71,13 @@ namespace _20200701
                 actDic[time] = dir;
             }
 
-            dic[GetPos(0, 0)] = new Data(1);
+            dic[GetPos(0, 0)] = new Data(2);
 
-            Display(dic, size);
+            //Display(dic, size);
 
             int sec = 0;
             int y = 0, x = 0;
-            int snakeLength = 1;
+            int snakeLength = 2;
             while (true)
             {
                 switch (myDir)
@@ -82,15 +96,38 @@ namespace _20200701
                         break;
                 }
 
-                foreach (var e in dic)
+                bool isMeetItem = false;
+                if (dic.ContainsKey(GetPos(y, x)) && dic[GetPos(y, x)].isItem)
                 {
-                    if (e.Value.snakeCount > 0)
-                        e.Value.snakeCount--;
+                    snakeLength++;
+                    isMeetItem = true;
+                    dic.Remove(GetPos(y, x));
                 }
 
-                foreach (var e in from d in dic where d.Value.snakeCount <= 0 select d)
+                if (!isMeetItem)
                 {
-                    dic.Remove(e.Key);
+                    foreach (var e in dic)
+                    {
+                        if (e.Value.snakeCount > 0)
+                            e.Value.snakeCount--;
+                    }
+
+                    List<int> removeList = new List<int>();
+                    foreach (var e in from d in dic where !d.Value.isItem && d.Value.snakeCount <= 0 select d)
+                    {
+                        removeList.Add(e.Key);
+                    }
+                    foreach (var e in removeList)
+                    {
+                        dic.Remove(e);
+                    }
+                }
+
+                sec++;
+
+                if (y < 0 || y >= size || x < 0 || x >= size || (dic.ContainsKey(GetPos(y, x)) && dic[GetPos(y, x)].snakeCount > 0))
+                {
+                    break;
                 }
 
                 if (!dic.ContainsKey(GetPos(y, x)))
@@ -98,12 +135,25 @@ namespace _20200701
                 else
                     dic[GetPos(y, x)].snakeCount = snakeLength;
 
-                sec++;
+                if (actDic.ContainsKey(sec))
+                {
+                    switch (actDic[sec])
+                    {
+                        case 'L':
+                            myDir--;
+                            break;
+                        case 'D':
+                            myDir++;
+                            break;
+                    }
+                    myDir = (DIR)Enum.ToObject(typeof(DIR), (Convert.ToInt32(myDir) + Convert.ToInt32(DIR.SIZE)) % Convert.ToInt32(DIR.SIZE));
+                }
 
-                Display(dic, size);
-                Console.ReadLine();
+                //Console.WriteLine(sec);
+                //Display(dic, size);
+                //Console.ReadLine();
             }
-
+            Console.WriteLine(sec);
         }
 
         static void Display(Dictionary<int, Data> dic, int size)
@@ -117,7 +167,7 @@ namespace _20200701
                         if (dic[GetPos(i, j)].isItem)
                             Console.Write("x");
                         else
-                            Console.Write("o");
+                            Console.Write(dic[GetPos(i, j)].snakeCount);
                     }
                     else
                         Console.Write("-");
