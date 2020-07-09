@@ -10,6 +10,23 @@ namespace _20200709_2748
     {
         static void Main(string[] args)
         {
+            long a = 0;
+            long b = 1;
+            int count = int.Parse(Console.ReadLine());
+
+            if (count == 1)
+            {
+                Console.WriteLine(1);
+                return;
+            }
+
+            for (int i = 0; i < count - 1; i++)
+            {
+                long t = b;
+                b += a;
+                a = t;
+            }
+            Console.WriteLine(b);
         }
     }
 }
