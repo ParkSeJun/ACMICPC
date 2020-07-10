@@ -5,7 +5,7 @@ namespace _20200710_9461
 {
     class Program
     {
-        static Dictionary<int, int> table = new Dictionary<int, int>();
+        static Dictionary<int, long> table = new Dictionary<int, long>();
 
         static void Main(string[] args)
         {
@@ -17,7 +17,7 @@ namespace _20200710_9461
             }
         }
 
-        static int Solve(int n)
+        static long Solve(int n)
         {
             if (n == -1 || n == 1)
                 return 1;
