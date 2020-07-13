@@ -32,10 +32,12 @@ int Solve(int index, int stepCount)
 
 int main()
 {
-	scanf("%d", &glassCount);
+	//scanf("%d", &glassCount);
+	glassCount = 10000;
 	arr = new int[glassCount];
 	for (size_t i = 0; i < glassCount; i++)
-		scanf("%d", &arr[i]);
+		/*scanf("%d", &arr[i]);*/
+		arr[i] = rand() % 1000 + 1;
 
 	int ret = Solve(-1, -1);
 	printf("%d", ret);

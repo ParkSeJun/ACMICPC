@@ -29,47 +29,34 @@ namespace _20200624_2156
     */
     class Program
     {
-        static Dictionary<KeyValuePair<int, int>, int> table = new Dictionary<KeyValuePair<int, int>, int>();
+        static int[] table;
         static int[] arr;
 
         static void Main(string[] args)
         {
             int count = int.Parse(Console.ReadLine().Trim());
             arr = new int[count];
+            table = new int[count];
             for (int i = 0; i < count; i++)
             {
                 arr[i] = int.Parse(Console.ReadLine().Trim());
+                table[i] = 0;
             }
 
-            int ret = Solve(-1, -1);
-            Console.WriteLine(ret);
+            for (int i = 0; i < count; i++)
+            {
+                int a = Get(table, i - 1);
+                int b = Get(table, i - 2) + Get(arr, i);
+                int c = Get(table, i - 3) + Get(arr, i - 1) + Get(arr, i);
+                table[i] = Math.Max(a, Math.Max(b, c));
+            }
 
-            //foreach (var key in table.Keys)
-            //{
-            //    Console.WriteLine($"{key.Key}, {key.Value} : {table[key]}");
-            //}
+            Console.WriteLine(table[count-1]);
         }
 
-        static int Solve(int index, int oneStepCount)
+        static int Get(int[] arr, int i)
         {
-            if (index >= arr.Length)
-                return 0;
-
-            if (oneStepCount >= 2)
-                return 0;
-
-            var key = new KeyValuePair<int, int>(index, oneStepCount);
-            if (!table.ContainsKey(key))
-            {
-                int a = Solve(index + 1, oneStepCount + 1);
-                List<int> bs = new List<int>();
-                for (int i = 2; i < arr.Length - index; i++)
-                    bs.Add(Solve(index + i, 0));
-                int max = Math.Max(a, bs.Count == 0 ? 0 : bs.Max());
-                table[key] = max + (index >= 0 ? arr[index] : 0);
-            }
-
-            return table[key];
+            return i < 0 ? 0 : arr[i];
         }
     }
 }
