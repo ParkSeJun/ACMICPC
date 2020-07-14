@@ -26,75 +26,34 @@ namespace _20200714_2565
         static void Main(string[] args)
         {
             int count = int.Parse(Console.ReadLine());
-            Dictionary<int, int> arr = new Dictionary<int, int>();
-            Dictionary<int, List<int>> table = new Dictionary<int, List<int>>();
+            SortedDictionary<int, int> dic = new SortedDictionary<int, int>();
             for (int i = 0; i < count; i++)
             {
                 var row = Console.ReadLine().Split();
                 int a = int.Parse(row[0]);
                 int b = int.Parse(row[1]);
-                arr[a] = b;
-                table[a] = new List<int>();
+                dic[a] = b;
             }
 
-            var arrKeys = new List<int>(arr.Keys);
-            for (int i = 0; i < arr.Count; i++)
+            var keys = dic.Keys.ToList();
+            int[] arr = new int[keys.Count];
+            int[] table = new int[keys.Count];
+            for (int i = 0; i < keys.Count; i++)
             {
-                int thisA = arrKeys[i];
-                int thisB = arr[thisA];
-                for (int j = 0; j < arr.Count; j++)
-                {
-                    if (i == j)
-                        continue;
-
-                    int thatA = arrKeys[j];
-                    int thatB = arr[thatA];
-
-                    if (thatA < thisA && thisB <= thatB ||
-                        thisA < thatA && thatB <= thisB)
-                        table[thisA].Add(thatA);
-                }
-                if (table[thisA].Count == 0)
-                    table.Remove(thisA);
+                arr[i] = dic[keys[i]];
+                table[i] = 0;
             }
 
-            int removeCount = 0;
-            while (true)
+            for (int i = 0; i < keys.Count; i++)
             {
-                var tableKeys = new List<int>(table.Keys);
-                int maxTableKey = 0;
-                int maxTableValue = 0;
-                for (int i = 0; i < table.Count; i++)
-                {
-                    int thisValue = table[tableKeys[i]].Count();
-                    if (maxTableValue < thisValue)
-                    {
-                        maxTableValue = thisValue;
-                        maxTableKey = tableKeys[i];
-                    }
-                }
-                if (maxTableValue == 0)
-                    break;
-
-                for (int i = 0; i < tableKeys.Count; i++)
-                {
-                    int thisKey = tableKeys[i];
-                    if (thisKey == maxTableKey)
-                        continue;
-                    List<int> p = table[thisKey];
-                    if (p.Contains(maxTableKey))
-                    {
-                        p.Remove(maxTableKey);
-                        if (p.Count == 0)
-                            table.Remove(thisKey);
-                    }
-                }
-
-                table.Remove(maxTableKey);
-                removeCount++;
+                int max = 0;
+                for (int j = 0; j < i; j++)
+                    if (arr[j] < arr[i] && max < table[j])
+                        max = table[j];
+                table[i] = max + 1;
             }
 
-            Console.WriteLine(removeCount);
+            Console.WriteLine(keys.Count - table.Max());
         }
     }
 }
