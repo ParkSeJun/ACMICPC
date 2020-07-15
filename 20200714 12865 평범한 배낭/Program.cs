@@ -22,11 +22,7 @@ namespace _20200714_12865
 
             int[][] arr = new int[2][];
             arr[0] = new int[count]; // W
-            arr[1] = new int[count]; // V
-
-            int[][] table = new int[2][];
-            table[0] = new int[count];
-            table[1] = new int[count];
+            arr[1] = new int[count]; // V 
 
             for (int i = 0; i < count; i++)
             {
@@ -35,32 +31,22 @@ namespace _20200714_12865
                 arr[1][i] = row[1];
             }
 
+            int[][] table = new int[count][];
             for (int i = 0; i < count; i++)
             {
-                int maxValue = arr[1][i];
-                int maxWeight = arr[0][i];
-                for (int j = 0; j < i; j++)
-                {
-                    if (table[0][j] + arr[0][i] <= weightLimit && maxValue < table[1][j] + arr[1][i])
-                    {
-                        maxValue = table[1][j] + arr[1][i];
-                        maxWeight = table[0][j] + arr[0][i];
-                    }
-                }
-                if (arr[0][i] <= weightLimit)
-                {
-                    table[0][i] = maxWeight;
-                    table[1][i] = maxValue ;
-                }
-                else
-                {
-                    table[0][i] = 0;
-                    table[1][i] = 0;
-                }
+                table[i] = new int[weightLimit + 1];
+                for (int j = 0; j < weightLimit + 1; j++)
+                    table[i][j] = 0;
             }
 
-            Console.WriteLine(table[1].Length == 0 ? 0 : table[1].Max());
+            for (int i = arr[0][0]; i < weightLimit + 1; i++)
+                table[0][i] = arr[1][0];
 
+            for (int i = 1; i < count; i++)
+                for (int j = 0; j < weightLimit + 1; j++)
+                    table[i][j] = Math.Max(table[i - 1][j], (arr[0][i] <= j ? table[i - 1][j - arr[0][i]] + arr[1][i] : 0));
+
+            Console.WriteLine(table[count - 1][weightLimit]);
         }
     }
 }
