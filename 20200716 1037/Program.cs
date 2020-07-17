@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace _20200716_1037
 {
@@ -10,6 +7,11 @@ namespace _20200716_1037
     {
         static void Main(string[] args)
         {
+            int count = int.Parse(Console.ReadLine());
+            var row = Array.ConvertAll(Console.ReadLine().Split(' '), e => int.Parse(e)).ToList();
+            row.Sort();
+            int answer = (count & 1) == 1 ? row[count / 2] * row[count / 2] : row[0] * row[count - 1];
+            Console.WriteLine(answer);
         }
     }
 }
