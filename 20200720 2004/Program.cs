@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 /*
 25 12
 
@@ -10,65 +8,42 @@ namespace _20200720_2004
 {
     class Program
     {
-        static List<int> arr2 = new List<int>();
-        static List<int> arr5 = new List<int>();
-
         static void Main(string[] args)
         {
             var row = Array.ConvertAll(Console.ReadLine().Split(' '), e => int.Parse(e));
             int n = row[0];
             int k = row[1];
 
-            int t = 1;
-            while (t <= int.MaxValue / 2)
-            {
-                arr2.Add(t);
-                t *= 2;
-            }
-            arr2.Add(t);
+            // nCk = nPk / k! = n! / k! / (n-k)!
 
-            t = 1;
-            while (t <= int.MaxValue / 5)
-            {
-                arr5.Add(t);
-                t *= 5;
-            }
-            arr2.Add(t);
+            int n2 = Get(n, 2);
+            int n5 = Get(n, 5);
+            int k2 = Get(k, 2);
+            int k5 = Get(k, 5);
+            int nk2 = Get(n - k, 2);
+            int nk5 = Get(n - k, 5);
 
-            var molecular = GetPermutation(n, k);
-            var denominator = GetPermutation(k, k);
-            var sum = new KeyValuePair<int, int>(molecular.Key - denominator.Key, molecular.Value - denominator.Value);
-            var ret = Math.Max(0, Math.Min(sum.Key, sum.Value));
+            n2 -= k2 + nk2;
+            n5 -= k5 + nk5;
+            int ret = Math.Max(0, Math.Min(n2, n5));
+
             Console.WriteLine(ret);
         }
 
-        static KeyValuePair<int, int> GetPermutation(int n, int k)
+        static int Get(int factorialN, int div)
         {
-            int div2 = 0;
-            int div5 = 0;
-            for (int i = 0; i < k; i++)
+            int t = div;
+            int count = 0;
+            while (t <= factorialN)
             {
-                div2 += Get2(n - i);
-                div5 += Get5(n - i);
+                count += factorialN / t;
+
+                if (t > int.MaxValue / div)
+                    break;
+
+                t *= div;
             }
-
-            return new KeyValuePair<int, int>(div2, div5);
-        }
-
-        static int Get2(int n)
-        {
-            for (int i = arr2.Count - 1; i > 0; --i)
-                if (n % arr2[i] == 0)
-                    return i;
-            return 0;
-        }
-
-        static int Get5(int n)
-        {
-            for (int i = arr5.Count - 1; i > 0; --i)
-                if (n % arr5[i] == 0)
-                    return i;
-            return 0;
+            return count;
         }
     }
 }
