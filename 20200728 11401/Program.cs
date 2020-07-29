@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-
 namespace _20200728_11401
 {
     class Program
@@ -14,19 +12,13 @@ namespace _20200728_11401
             var row = Array.ConvertAll(Console.ReadLine().Split(' '), e => int.Parse(e));
             long n = row[0];
             long k = row[1];
-
-            if (k == n)
-            {
-                Console.WriteLine(1);
-                return;
-            }
-
+            
             if (k > n / 2)
                 k = n - k;
 
             if (k == 0)
             {
-                Console.WriteLine(0);
+                Console.WriteLine(1);
                 return;
             }
 
@@ -44,7 +36,7 @@ namespace _20200728_11401
             nf = f;
 
 
-            long ret = (nf % p) * (GetPow2((kf * nkf) % p, p - 2) % p) % p;
+            long ret = (nf % p) * (GetPow1((kf * nkf) % p, p - 2) % p) % p;
 
 
             Console.WriteLine(ret);
@@ -55,10 +47,10 @@ namespace _20200728_11401
             if (pow == 0)
                 return 1;
 
-            long half = GetPow1(n, pow / 2);
-            long square = half * half;
+            long half = GetPow1(n, pow / 2) % p;
+            long square = half * half % p;
             if ((pow & 1) == 1)
-                return square * n;
+                return (square * n) % p;
             return square;
         }
 
